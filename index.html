@@ -1,0 +1,89 @@
+<html lang="en">
+
+<head>
+  <!-- TODO - I copied this from the Grist stock monitor, and these dependencies are NOT self-hosted! -->
+  <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    td {
+      border-bottom: 1px solid lightgray;
+    }
+
+    tr {
+      font-weight: bold;
+      height: 34px;
+    }
+
+    button {
+      width: 100%;
+      max-width: 220px;
+    }
+
+    #loader,
+    #config {
+      position: absolute;
+      inset: 0px;
+      z-index: 10;
+      background: lightgray;
+      opacity: 0.9;
+      display: grid;
+      place-items: center;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div style="font-size: smaller; margin-top: 2em">
+      This widget fetches data from the firefly-iii API. To get started, please do TBC.
+    </div>
+
+    <p>
+      <label for="firefly-iii-url">Firefly-iii URL:</label>
+      <input type="text" id="firefly-iii-url" v-model="firefly_iii_url" />
+    </p>
+
+    <p v-if="firefly_iii_url_valid">
+      Visit <a :href="firefly_iii_config_url" target="_blank">{{ firefly_iii_config_url }}</a> to configure firefly-iii. Click the OAuth tab, and create a new token.
+    </p>
+
+    <p>
+      <label for="firefly-iii-personal-access-token">Personal access token:</label>
+      <input type="password" id="firefly-iii-personal-access-token" v-model="firefly_iii_personal_access_token"/>
+    </p>
+
+    <p>
+      <button @click=testConnectivity>Test Connectivity</button>
+    </p>
+
+    <p v-if="!test_waiting">{{test_result}}</p>
+
+    <p>
+      <button @click=saveConfig>Save Config</button>
+    </p>
+
+    <p>
+      <button @click=fetchTransactions>Fetch Transactions</button>
+    </p>
+
+  </div>
+
+  <script src="index.js"></script>
+</body>
+
+</html>
