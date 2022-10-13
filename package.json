@@ -19,7 +19,7 @@
   "description": "Bring data from firefly-iii into grist",
   "repository": "git@github.com:johncant/firefly-grist",
   "author": "John Cant <a.johncant@gmail.com>",
-  "license": "GPLv3",
+  "license": "GPL-3.0-only",
   "private": false,
   "devDependencies": {
     "webpack-cli": "^4.10.0",
