@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -48,39 +49,116 @@
 </head>
 
 <body>
+  <template id="Tablesetup">
+
+    <transition @after-enter=populateTableSetup>
+      <div>
+        <h3>Table setup</h3>
+
+        <p v-if="loading">Loading...</p>
+
+        <p v-else>
+          <span>Table name: </span><span>{{ name }}</span>
+          <ul>
+            <li v-for="item in results">{{item.name}} - <span class="status">{{item.message}}</span></li>
+          </ul>
+        </p>
+
+        <p>
+          <button @click=modifyTable>MODIFY</button>
+        </p>
+
+        <p>
+          <button @click="$emit('close')">Back</button>
+        </p>
+      </div>
+    </transition>
+  </template>
+
+  <template id="Connection">
+
+    <transition @after-enter=populateConnection>
+      <div>
+        <h3 v-if=new>New Connection</h3>
+        <h3 v-else>Edit Connection</h3>
+
+        <p v-if="loading">Loading...</p>
+
+        <p v-else>
+          <label for="firefly-iii-url">Firefly-iii URL:</label>
+          <input type="text" id="firefly-iii-url" v-model="firefly_iii_url" />
+        </p>
+
+        <p v-if="firefly_iii_url_valid">
+          Visit <a :href="firefly_iii_config_url" target="_blank">{{ firefly_iii_config_url }}</a> to configure firefly-iii. Click the OAuth tab, and create a new token.
+        </p>
+
+        <p>
+          <label for="firefly-iii-personal-access-token">Personal access token:</label>
+          <input type="password" id="firefly-iii-personal-access-token" v-model="firefly_iii_personal_access_token"/>
+        </p>
+
+        <p>
+          <button @click=testConnectivity>Test Connectivity</button>
+        </p>
+
+        <p v-if="!test_waiting">{{test_result}}</p>
+
+        <p>
+          <button @click=saveConfig>Save Config</button>
+        </p>
+
+      </div>
+    </transition>
+  </template>
+
   <div id="app">
-    <div style="font-size: smaller; margin-top: 2em">
-      This widget fetches data from the firefly-iii API. To get started, please do TBC.
+
+    <h2>Grist Firefly Widget</h2>
+
+    <div id="main_menu" v-if="screen == 'main_menu'">
+      <h3>Main menu</h3>
+
+      <p>
+        <button @click="screen = 'tablesetup'">Table setup</button>
+      </p>
+
+      <p>
+        <button @click=newConnection>Add connection</button>
+      </p>
+
+      <p>
+        <button>Fetch data</button>
+      </p>
     </div>
 
-    <p>
-      <label for="firefly-iii-url">Firefly-iii URL:</label>
-      <input type="text" id="firefly-iii-url" v-model="firefly_iii_url" />
-    </p>
+    <Tablesetup screen=screen v-if="screen == 'tablesetup'" @close="screen = 'main_menu'"/>
 
-    <p v-if="firefly_iii_url_valid">
-      Visit <a :href="firefly_iii_config_url" target="_blank">{{ firefly_iii_config_url }}</a> to configure firefly-iii. Click the OAuth tab, and create a new token.
-    </p>
+  </div>
 
-    <p>
-      <label for="firefly-iii-personal-access-token">Personal access token:</label>
-      <input type="password" id="firefly-iii-personal-access-token" v-model="firefly_iii_personal_access_token"/>
-    </p>
+      <div v=if="unmapped_columns">
+      <p>Unmapped columns<p>
 
-    <p>
-      <button @click=testConnectivity>Test Connectivity</button>
-    </p>
+      <p>
+        <button @onclick=tableSetup>Set up table</button>
+      </p>
 
-    <p v-if="!test_waiting">{{test_result}}</p>
+      <p>
+        <button @onclick=tableSetup>Table setup</button>
+      </p>
 
-    <p>
-      <button @click=saveConfig>Save Config</button>
-    </p>
+    <div id="connection" v-if="screen == 'connection'">
 
-    <p>
-      <button @click=fetchTransactions>Fetch Transactions</button>
-    </p>
+      <div style="font-size: smaller; margin-top: 2em">
+        This widget fetches data from the firefly-iii API. To get started, please do TBC.
+      </div>
 
+
+      <p>
+        <button @click=fetchTransactions>Fetch Transactions</button>
+      </p>
+
+    </div>
   </div>
 
   <script src="index.js"></script>
