@@ -1,5 +1,7 @@
 <script language=javascript>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   data() {
     return {
       loading: true,
@@ -35,7 +37,7 @@ export default {
       this.loading = false
     },
   }
-}
+})
 </script>
 <template>
 

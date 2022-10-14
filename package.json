@@ -1,40 +1,46 @@
 {
-  "dependencies": {
-    "axios": "*",
-    "browserify": "*",
-    "eslint": "^8.0.1",
-    "eslint-plugin-html": "^7.1.0",
-    "eslint-plugin-vue": "^9.6.0",
-    "express": "^4.18.2",
-    "grist-plugin-api": "^0.0.1",
-    "neovim": "^4.10.1",
-    "ts-loader": "^9.4.1",
-    "typescript": "*",
-    "vls": "^0.8.1",
-    "vue": "^3.2.40",
-    "vue-language-server": "^0.0.67",
-    "vue-loader": "^17.0.0",
-    "vue-template-compiler": "^2.7.12",
-    "watchify": "^4.0.0",
-    "webpack": "^5.74.0"
-  },
-  "scripts": {
-    "build": "webpack"
-  },
   "name": "firefly-grist",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview --port 4173",
+    "test:unit": "vitest --environment jsdom",
+    "test:e2e": "start-server-and-test preview http://localhost:4173/ 'cypress open --e2e'",
+    "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "grist-plugin-api": "^0.0.1",
+    "vue": "^3.2.38"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@types/jsdom": "^20.0.0",
+    "@types/node": "^16.11.56",
+    "@vitejs/plugin-vue": "^3.0.3",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^11.0.0",
+    "@vue/test-utils": "^2.0.2",
+    "@vue/tsconfig": "^0.1.3",
+    "cypress": "^10.7.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-vue": "^9.3.0",
+    "jsdom": "^20.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.7.1",
+    "start-server-and-test": "^1.14.0",
+    "typescript": "~4.7.4",
+    "vite": "^3.0.9",
+    "vitest": "^0.23.0",
+    "vue-tsc": "^0.40.7"
+  },
   "description": "Bring data from firefly-iii into grist",
   "repository": "git@github.com:johncant/firefly-grist",
   "author": "John Cant <a.johncant@gmail.com>",
   "license": "GPL-3.0-only",
-  "private": false,
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "eslint-config-standard-with-typescript": "^23.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-n": "^15.0.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
-  }
+  "private": false
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <!-- TODO - I copied this from the Grist stock monitor, and these dependencies are NOT self-hosted! -->
   <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
@@ -85,31 +84,9 @@
     </transition>
   </template>
 
-  <div id="app">
+  <div id="app"></div>
 
-    <h2>Grist Firefly Widget</h2>
-
-    <div id="main_menu" v-if="screen == 'main_menu'">
-      <h3>Main menu</h3>
-
-      <p>
-        <button @click="screen = 'tablesetup'">Table setup</button>
-      </p>
-
-      <p>
-        <button @click=newConnection>Add connection</button>
-      </p>
-
-      <p>
-        <button>Fetch data</button>
-      </p>
-    </div>
-
-    <Tablesetup screen=screen v-if="screen == 'tablesetup'" @close="screen = 'main_menu'"/>
-
-  </div>
-
-  <script src="main.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
