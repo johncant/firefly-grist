@@ -1,3 +1,10 @@
+import { createApp } from 'vue/dist/vue.esm-bundler'
+const grist = require('grist-plugin-api')
+
+//const Tablesetup = require('./Tablesetup.vue')
+import Tablesetup from  './Tablesetup.vue'
+console.log(Tablesetup)
+
 //const normalizeUrl = require('normalize-url').normalizeUrl;
 //const axios = require("axios")
 
@@ -9,6 +16,11 @@
 // and if any of this message has a tableId, we will store it in global window
 // object.
 let tableId;
+
+if (typeof(grist) === "undefined") {
+  throw "grist is not defined"
+}
+
 grist.on("message", (data) => {
   if (data.tableId) {
     tableId = data.tableId;
@@ -22,11 +34,6 @@ grist.onRecord(async function(record, mappings) {
   const foo = await grist.mapColumnNames(record)
   console.log(foo)
 })
-
-// Next we will listen to onRecords event and store the information
-// that is send with this event in two global variables.
-let rows = null; // All rows in a table.
-let mappings = null; // Column mappings configuration.
 
 // Tell Grist that we are ready, and inform about our requirements.
 grist.ready({
@@ -57,8 +64,34 @@ grist.onOptions(options => {
   app.firefly_iii_personal_access_token = options?.firefly_iii_personal_access_token || '';
 });
 
+// Next we will listen to onRecords event and store the information
+// that is send with this event in two global variables.
+let rows = null; // All rows in a table.
+let mappings = null; // Column mappings configuration.
+
+// Tell Grist that we are ready, and inform about our requirements.
+grist.ready({
+  // We need full access to the document, in order to update stock prices.
+  requiredAccess: 'full',
+  // We need some information how to read the table.
+  columns: [
+    {
+      "name": 'URL',
+      "type": 'string'
+    },
+    {
+      "name": 'AccessToken',
+      "type": "string"
+    }
+  ],
+  // Show configuration screen when we press "Open configuration" in the Creator panel.
+  onEditOptions() {
+    ui.screen = "config"
+  }
+});
+
 // Here we will use VueJS framework to bind JavaScript object to HTML.
-const app = Vue.createApp({
+const app = createApp({
   data() {
     return {
       screen: "main_menu",
@@ -133,44 +166,7 @@ const app = Vue.createApp({
 
   },
   components: {
-    "Tablesetup": {
-      template: "#Tablesetup",
-      data() {
-        return {
-          loading: true,
-          name: null,
-          results: []
-        }
-      },
-      methods: {
-        async modifyTable() {
-          this.populateTableSetup()
-        },
-        async populateTableSetup() {
-          this.loading = true
-          this.name = await grist.selectedTable.getTableId()
-          const required_columns = ["id", "URL", "AccessToken"]
-          const mapped_columns = await grist.mapColumnNamesBack(required_columns)
-
-          function statusMessage(col) {
-            if(mapped_columns == null) {
-              return "Column mapping incomplete"
-            } else {
-              return "Mapped successfully"
-            }
-          }
-
-          this.results = this.results.slice(0, 0)
-          required_columns.forEach((col) => {
-            this.results.push({name: col, message: statusMessage(col)})
-          })
-
-          console.log(this.results)
-
-          this.loading = false
-        },
-      }
-    },
+    "Tablesetup": Tablesetup,
     "AddConnection": {
       template: "#AddConnection",
       data() {
