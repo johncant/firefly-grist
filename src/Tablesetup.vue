@@ -1,4 +1,4 @@
-<script language=javascript>
+<script lang=ts>
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -16,7 +16,7 @@ export default defineComponent({
     async populateTableSetup() {
       this.loading = true
       this.name = await grist.selectedTable.getTableId()
-      const required_columns = ["id", "URL", "AccessToken"]
+      const required_columns = ["URL", "AccessToken"]
       const mapped_columns = await grist.mapColumnNamesBack(required_columns)
 
       function statusMessage(col) {

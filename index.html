@@ -47,42 +47,6 @@
 
 <body>
 
-  <template id="Connection">
-
-    <transition @after-enter=populateConnection>
-      <div>
-        <h3 v-if=new>New Connection</h3>
-        <h3 v-else>Edit Connection</h3>
-
-        <p v-if="loading">Loading...</p>
-
-        <p v-else>
-          <label for="firefly-iii-url">Firefly-iii URL:</label>
-          <input type="text" id="firefly-iii-url" v-model="firefly_iii_url" />
-        </p>
-
-        <p v-if="firefly_iii_url_valid">
-          Visit <a :href="firefly_iii_config_url" target="_blank">{{ firefly_iii_config_url }}</a> to configure firefly-iii. Click the OAuth tab, and create a new token.
-        </p>
-
-        <p>
-          <label for="firefly-iii-personal-access-token">Personal access token:</label>
-          <input type="password" id="firefly-iii-personal-access-token" v-model="firefly_iii_personal_access_token"/>
-        </p>
-
-        <p>
-          <button @click=testConnectivity>Test Connectivity</button>
-        </p>
-
-        <p v-if="!test_waiting">{{test_result}}</p>
-
-        <p>
-          <button @click=saveConfig>Save Config</button>
-        </p>
-
-      </div>
-    </transition>
-  </template>
 
   <div id="app"></div>
 

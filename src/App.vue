@@ -1,20 +1,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import * as grist from 'grist-plugin-api'
 import Tablesetup from './Tablesetup.vue'
+import Connection from './Connection.vue'
+
 
 export default defineComponent({
   data() {
     return {
       screen: "main_menu",
-      firefly_iii_url: "foo",
-      firefly_iii_personal_access_token: "",
-      test_waiting: false,
-      test_result: "",
-      // If we are currently waiting for the prices.
-      waiting: false,
-      // Api key stored inside the textbox on thebootstrap grain configuration screen.
-      apikey: '',
-      // Holds error message that can be shown on the UI.
       error: '',
       // If config screen is visible.
       config: false,
@@ -27,21 +21,29 @@ export default defineComponent({
       }]
     }
   },
-  computed: {
-    testComputed() {
-      return "foobar"
-    },
-    firefly_iii_url_valid() {
-      return this.firefly_iii_url.length > 0
-    },
-    firefly_iii_clean_url() {
-      return this.firefly_iii_url //normalizeUrl(this.firefly_iii_url)
-    },
-    firefly_iii_config_url() {
-      return this.firefly_iii_clean_url+"/profile#oauth"
-    }
-  },
   methods: {
+    mounted() {
+      // Tell Grist that we are ready, and inform about our requirements.
+      grist.ready({
+        // We need full access to the document, in order to update stock prices.
+        requiredAccess: 'full',
+        // We need some information how to read the table.
+        columns: [
+          {
+            "name": 'URL',
+            "type": 'string'
+          },
+          {
+            "name": 'AccessToken',
+            "type": "string"
+          }
+        ],
+        // Show configuration screen when we press "Open configuration" in the Creator panel.
+        onEditOptions() {
+          app.screen = "config";
+        }
+      });
+    },
     refresh() {
       refreshClicked();
     },
@@ -52,45 +54,13 @@ export default defineComponent({
       grist.setOption("firefly_iii_url", this.firefly_iii_url);
       grist.setOption("firefly_iii_personal_access_token", this.firefly_iii_personal_access_token);
     },
-    client() {
-      return axios.create({
-        baseURL: this.firefly_iii_clean_url,
-        headers: {
-          'Authorization': 'Bearer '+this.firefly_iii_personal_access_token
-        }
-      })
-    },
-    testConnectivity() {
-      this.test_waiting = true;
-      this.client().get("/api/v1/about")
-      .then(response => {
-        this.test_result = JSON.stringify(response.data.data)
-      }, error => {
-        this.test_result = error.message
-      }).finally(() => {
-        this.test_waiting = false
-      })
-    },
-    fetchTransactions() {
-      this.client.get("")
-    },
-
+    newConnection() {
+      this.screen = "connection";
+    }
   },
   components: {
     "Tablesetup": Tablesetup,
-    "AddConnection": {
-      template: "#AddConnection",
-      data() {
-        return {
-          loading: true,
-          name: null,
-          results: []
-        }
-      },
-      props: ['screen'],
-      methods: {
-      }
-    }
+    "Connection": Connection
   }
 })
 </script>
@@ -114,4 +84,5 @@ export default defineComponent({
   </div>
 
   <Tablesetup screen=screen v-if="screen == 'tablesetup'" @close="screen = 'main_menu'"></TableSetup>
+  <Connection screen=screen v-if="screen == 'connection'" @close="screen = 'main_menu'"></Connection>
 </template>
