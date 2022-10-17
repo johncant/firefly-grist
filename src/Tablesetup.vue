@@ -16,7 +16,7 @@ export default defineComponent({
     async populateTableSetup() {
       this.loading = true
       this.name = await grist.selectedTable.getTableId()
-      const required_columns = ["URL", "AccessToken"]
+      const required_columns = ["firefly_iii_url", "firefly_iii_personal_access_token"]
       const mapped_columns = await grist.mapColumnNamesBack(required_columns)
 
       function statusMessage(col) {

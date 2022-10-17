@@ -1,12 +1,11 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, toRaw } from 'vue'
 import ConnectivityTest from './ConnectivityTest.vue'
+import widget from './widget.ts'
 import axios from 'axios'
 
 function newDefaults() {
   return {
-    name: null,
-    is_new: true,
     firefly_iii_url: "",
     firefly_iii_personal_access_token: "",
   }
@@ -14,18 +13,22 @@ function newDefaults() {
 
 export default defineComponent({
   data() {
-    const data = newDefaults();
-    data['loading'] = true
-    data['results'] = []
-    return data
+    return {
+      connection: newDefaults(),
+      is_new: true,
+      loading: true,
+      results: [],
+      saving: false,
+      save_message: ""
+    }
   },
   props: ['screen'],
   computed: {
     firefly_iii_url_valid() {
-      return this.firefly_iii_url.length > 0
+      return this.connection.firefly_iii_url.length > 0
     },
     firefly_iii_clean_url() {
-      return this.firefly_iii_url //normalizeUrl(this.firefly_iii_url)
+      return this.connection.firefly_iii_url//normalizeUrl(this.firefly_iii_url)
     },
     firefly_iii_config_url() {
       return this.firefly_iii_clean_url+"/profile#oauth"
@@ -34,7 +37,7 @@ export default defineComponent({
       return axios.create({
         baseURL: this.firefly_iii_clean_url,
         headers: {
-          'Authorization': 'Bearer '+this.firefly_iii_personal_access_token
+          'Authorization': 'Bearer '+this.connection.firefly_iii_personal_access_token
         }
       })
     },
@@ -45,6 +48,16 @@ export default defineComponent({
   methods: {
     populateConnection() {
       this.loading = false;
+    },
+    saveConfig() {
+      this.saving = true;
+      widget.saveConnection(toRaw(this.connection)).then(response => {
+        this.save_message = "Success"
+      }, error => {
+        this.save_message = error.message
+      }).finally(() => {
+        this.saving = false;
+      })
     }
   }
 });
@@ -57,9 +70,13 @@ export default defineComponent({
 
       <p v-if="loading">Loading...</p>
 
+      <p v-if="!is_new">
+        <label for="id">Connection id:</label><span>{{ connection.id }}</span>
+      </p>
+
       <p>
         <label for="firefly-iii-url">Firefly-iii URL:</label>
-        <input type="text" id="firefly-iii-url" v-model="firefly_iii_url" />
+        <input type="text" id="firefly-iii-url" v-model="connection.firefly_iii_url" />
       </p>
 
       <p v-if="firefly_iii_url_valid">
@@ -68,7 +85,7 @@ export default defineComponent({
 
       <p>
         <label for="firefly-iii-personal-access-token">Personal access token:</label>
-        <input type="password" id="firefly-iii-personal-access-token" v-model="firefly_iii_personal_access_token"/>
+        <input type="password" id="firefly-iii-personal-access-token" v-model="connection.firefly_iii_personal_access_token"/>
       </p>
 
       <ConnectivityTest :client=client></ConnectivityTest>
@@ -76,6 +93,9 @@ export default defineComponent({
       <p>
         <button @click=saveConfig>Save Config</button>
       </p>
+
+      <p v-if="saving">Saving connection</p>
+      <p v-if="!saving">{{ save_message }}</p>
 
     </div>
   </transition>

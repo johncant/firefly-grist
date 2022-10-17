@@ -9,17 +9,18 @@ export default {
       // We need some information how to read the table.
       columns: [
         {
-          "name": 'URL',
-          "type": 'string'
+          "name": 'firefly_iii_url',
+          "type": 'Text',
         },
         {
-          "name": 'AccessToken',
-          "type": "string"
+          "name": 'firefly_iii_personal_access_token',
+          "type": "Text",
+          "optional": true
         }
       ],
       // Show configuration screen when we press "Open configuration" in the Creator panel.
       onEditOptions() {
-        ui.screen = "config"
+        app.screen = "tablesetup"
       }
     });
 
@@ -30,5 +31,20 @@ export default {
       app.firefly_iii_url = options?.firefly_iii_url || '';
       app.firefly_iii_personal_access_token = options?.firefly_iii_personal_access_token || '';
     });
+  },
+  async saveConnection(connection) {
+    const mappings = await grist.sectionApi.mappings()
+
+    console.log(connection)
+    const record = grist.mapColumnNamesBack(connection, {'mappings': mappings})
+
+    if (record == null) {
+      throw new Error("Columns were not mapped");
+    }
+
+    delete record['id']
+    console.log(record)
+
+    await grist.selectedTable.create({'fields': record})
   }
 }
