@@ -1,11 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { FetchAccounts } from './FetchAccounts.vue'
 
 export default defineComponent({
   props: ["screen"],
   components: {
-    "Fetchaccounts": FetchAccounts
   }
 });
 </script>
@@ -18,11 +16,22 @@ export default defineComponent({
         <button @click="screen = 'fetch_accounts'">Fetch Accounts</button>
       </p>
 
+      <p>This will create or overwrite a table with accounts data.</p>
+
+      <p>connection id: {{ connection_id }}</p>
+
+      <p>
+        <label for="table_name">Table name</label><input type="text" :value="table_name"></input>
+      </p>
+
+      <p>
+        <button>Fetch</button>
+      </p>
+
       <p>
         <button @click="$emit('close')">Back</button>
       </p>
 
     </div>
   </transition>
-  <Fetchaccounts screen=screen v-if="screen == 'fetch_accounts'" @close="screen = 'main_menu'" widget=widget></Fetchaccounts>
 </template>

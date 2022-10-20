@@ -13,7 +13,7 @@ export default defineComponent({
     testConnectivity() {
       this.test_waiting = true;
       console.log(this.client)
-      this.client.get("/api/v1/about")
+      this.client.testConnectivity()
       .then(response => {
         this.test_result = JSON.stringify(response.data.data)
       }, error => {

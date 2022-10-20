@@ -2,8 +2,9 @@
 import { defineComponent } from 'vue'
 import Tablesetup from './Tablesetup.vue'
 import Connection from './Connection.vue'
-import Fetch from './Fetch.vue'
+import FetchAccounts from './FetchAccounts.vue'
 import widget from './widget.ts'
+import { App } from './types/App.js'
 
 
 export default defineComponent({
@@ -13,17 +14,17 @@ export default defineComponent({
     }
   },
   methods: {
-    newConnection() {
+    newConnection(this: App) {
       this.screen = "connection";
     }
   },
-  mounted() {
+  mounted(this: App) {
     widget.init(self)
   },
   components: {
     "Tablesetup": Tablesetup,
     "Connection": Connection,
-    "Fetch": Fetch
+    "FetchAccounts": FetchAccounts
   }
 })
 </script>
@@ -42,11 +43,15 @@ export default defineComponent({
     </p>
 
     <p>
-      <button @click="screen = 'fetch'">Fetch data</button>
+      <button @click="screen = 'fetch_accounts'">Fetch Accounts</button>
+    </p>
+
+    <p>
+      <button @click="screen = 'fetch_transactions'">Fetch Transactions</button>
     </p>
   </div>
 
   <Tablesetup screen=screen v-if="screen == 'tablesetup'" @close="screen = 'main_menu'"></TableSetup>
   <Connection screen=screen v-if="screen == 'connection'" @close="screen = 'main_menu'" widget=widget></Connection>
-  <Fetch screen=screen v-if="screen == 'fetch'" @close="screen = 'main_menu'" widget=widget></Fetch>
+  <FetchAccounts screen=screen v-if="screen == 'fetch_accounts'" @close="screen = 'main_menu'" widget=widget></FetchAccounts>
 </template>

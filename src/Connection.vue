@@ -2,7 +2,7 @@
 import { defineComponent, toRaw } from 'vue'
 import ConnectivityTest from './ConnectivityTest.vue'
 import widget from './widget.ts'
-import axios from 'axios'
+import Client from './client.ts'
 
 function newDefaults() {
   return {
@@ -34,11 +34,9 @@ export default defineComponent({
       return this.firefly_iii_clean_url+"/profile#oauth"
     },
     client() {
-      return axios.create({
-        baseURL: this.firefly_iii_clean_url,
-        headers: {
-          'Authorization': 'Bearer '+this.connection.firefly_iii_personal_access_token
-        }
+      return new Client({
+        firefly_iii_url: this.firefly_iii_clean_url,
+        firefly_iii_personal_access_token: this.connection.firefly_iii_personal_access_token
       })
     },
   },
