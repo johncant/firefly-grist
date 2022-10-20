@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 import type { FireflyConnection } from './types/FireflyConnection.js'
 
 export default class Client {
@@ -7,14 +7,15 @@ export default class Client {
 
   constructor(conn: FireflyConnection) {
     this.http_client = axios.create({
-      baseURL: conn.firefly_iii_clean_url,
+      baseURL: conn.firefly_iii_url,
       headers: {
-        'Authorization': 'Bearer '+conn.connection.firefly_iii_personal_access_token
+        'Authorization': 'Bearer '+conn.firefly_iii_personal_access_token
       }
     })
   }
 
-  testConnectivity() {
-    return this.http_client.get("/api/v1/about")
+  async testConnectivity() {
+    const response = await this.http_client.get("/api/v1/about")
+    return response.data
   }
 }

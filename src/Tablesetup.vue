@@ -1,12 +1,18 @@
 <script lang=ts>
 import { defineComponent } from 'vue'
+import widget from './widget.js'
+import type { TableSetup } from './types/TableSetup.js'
+
+declare interface TableSetupComponentData {
+  loading: boolean;
+}
 
 export default defineComponent({
-  data() {
+  data(): TableSetup & TableSetupComponentData {
     return {
       loading: true,
-      name: null,
-      results: []
+      name: "",
+      column_info: []
     }
   },
   methods: {
@@ -14,27 +20,13 @@ export default defineComponent({
       this.populateTableSetup()
     },
     async populateTableSetup() {
-      this.loading = true
-      this.name = await grist.selectedTable.getTableId()
-      const required_columns: string[]  = ["firefly_iii_url", "firefly_iii_personal_access_token"]
-      const mapped_columns = await grist.mapColumnNamesBack(required_columns)
+      this.loading = true;
+      const data = await widget.getTableSetup()
 
-      function statusMessage(col: string) {
-        if(mapped_columns == null) {
-          return "Column mapping incomplete"
-        } else {
-          return "Mapped successfully"
-        }
-      }
-
-      this.results = this.results.slice(0, 0)
-      required_columns.forEach((col) => {
-        this.results.push({name: col, message: statusMessage(col)})
-      })
-
-      console.log(this.results)
-
-      this.loading = false
+      // TODO - just set the object
+      this.name = data.name
+      this.column_info = data.column_info // TODO - won't work due change of object
+      this.loading = false;
     },
   }
 })
@@ -50,7 +42,7 @@ export default defineComponent({
       <p v-else>
         <span>Table name: </span><span>{{ name }}</span>
         <ul>
-          <li v-for="item in results">{{item.name}} - <span class="status">{{item.message}}</span></li>
+          <li v-for="item in column_info">{{item.name}} - <span class="status">{{item.status_message}}</span></li>
         </ul>
       </p>
 

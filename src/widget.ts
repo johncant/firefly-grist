@@ -1,6 +1,7 @@
 import * as _grist from 'grist-plugin-api'
-import { App } from './types/App.js'
-import { FireflyConnection } from './types/FireflyConnection.js'
+import type { App } from './types/App.js'
+import type { TableSetup } from './types/TableSetup.js'
+import type { FireflyConnection } from './types/FireflyConnection.js'
 
 const grist : any = _grist // TODO - why are typings not correct?
 
@@ -29,6 +30,31 @@ export default {
     });
 
   },
+  async getTableSetup(): Promise<TableSetup> {
+    const name = await grist.selectedTable.getTableId()
+
+    const required_columns: string[]  = ["firefly_iii_url", "firefly_iii_personal_access_token"]
+    const mapped_columns = await grist.mapColumnNamesBack(required_columns)
+
+    function statusMessage(col: string) {
+      if(mapped_columns == null) {
+        return "Column mapping incomplete"
+      } else {
+        return "Mapped successfully"
+      }
+    }
+
+    const results = required_columns.map((col) => {
+      return {name: col, status_message: statusMessage(col)}
+    })
+
+    return {
+      "name": name,
+      "column_info": results
+    }
+
+  },
+
   async saveConnection(connection: FireflyConnection) {
     const mappings = await grist.sectionApi.mappings()
 
@@ -44,13 +70,28 @@ export default {
 
     await grist.selectedTable.create({'fields': record})
   },
+  async createOrOverwriteTable(table_name: string, columns: any[]) {
+    const all_tables = await grist.docApi.listTables();
+    const needs_deletion = table_name in all_tables;
+
+    const actions = [];
+    
+    if (needs_deletion) actions.push(["RemoveTable", table_name])
+
+    actions.push(
+      ["AddTable", table_name, columns]
+    )
+
+    await grist.docApi.applyUserActions(actions)
+
+    return
+  },
   async createOrOverwriteAccountsTable(table_name: string) {
-    await grist.docApi.applyUserActions([
-      ["RemoveTable", "Quux"],
-      ["AddTable", "Quux", [
-        {isFormula: true, type: "Any", id: "blabla", formula: ""}
-      ]]
-    ])
+    const columns = [
+      {isFormula: true, type: "Any", id: "blabla", formula: ""}
+    ]
+    await this.createOrOverwriteTable(table_name, columns)
+    return
   },
   onRecord: grist.onRecord,
   fetchSelectedRecord: grist.viewApi.fetchSelectedRecord

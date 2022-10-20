@@ -3,29 +3,33 @@ import { defineComponent, toRaw } from 'vue'
 import widget from './widget.js'
 import type { FireflyConnectionRecord } from './types/FireflyConnectionRecord.js'
 
-interface FetchAccounts {
+interface FetchAccountsData {
   table_name: string;
-  connection: FireflyConnectionRecord;
-  setRecord: (FireflyConnectionRecord) => null
+  connection?: FireflyConnectionRecord;
 }
+interface FetchAccountsMethods {
+  setRecord: (rec: FireflyConnectionRecord) => null;
+}
+
+type FetchAccounts = FetchAccountsData & FetchAccountsMethods;
 
 export default defineComponent({
   mounted() {
     widget.onRecord(this.setRecord);
     widget.fetchSelectedRecord().then(this.setRecord);
   },
-  data() {
+  data(): FetchAccountsData {
     return {
       "table_name": "",
-      "connection": null
+      "connection": undefined
     }
   },
   props: ["screen"],
   computed: {
   },
   methods: {
-    setRecord(rec: FireflyConnectionRecord) {
-      this.connection = rec
+    setRecord(this: FetchAccounts, rec: FireflyConnectionRecord) {
+      this.connection = rec;
     },
     fetchAccounts(this: FetchAccounts) {
       console.log(toRaw(this.connection))

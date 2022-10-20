@@ -1,8 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+interface ConnectivityTestComponentData {
+  test_waiting: boolean;
+  test_result: string;
+}
+
 export default defineComponent({
-  data() {
+  data(): ConnectivityTestComponentData {
     return {
       test_waiting: true,
       test_result: "",
@@ -10,17 +15,16 @@ export default defineComponent({
   },
   props: ['client'],
   methods: {
-    testConnectivity() {
+    async testConnectivity() {
       this.test_waiting = true;
-      console.log(this.client)
-      this.client.testConnectivity()
-      .then(response => {
-        this.test_result = JSON.stringify(response.data.data)
-      }, error => {
-        this.test_result = error.message
-      }).finally(() => {
+      try {
+        const response_data = await this.client.testConnectivity()
+        this.test_result = JSON.stringify(response_data.data)
+      } catch(error: any) {
+        this.test_result = error.message;
+      } finally {
         this.test_waiting = false
-      })
+      }
     },
   }
 });

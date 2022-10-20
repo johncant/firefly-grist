@@ -4,7 +4,32 @@ import ConnectivityTest from './ConnectivityTest.vue'
 import widget from './widget.js'
 import Client from './client.js'
 import type { FireflyConnection } from './types/FireflyConnection.js'
-import type { FireflyConnectionRecord } from 'types/FireflyConnectionRecord.js'
+import type { FireflyConnectionRecord } from './types/FireflyConnectionRecord.js'
+
+
+type MaybeUnsavedFireflyConnectionRecord = FireflyConnection & {
+  id?: number;
+}
+
+
+declare interface ConnectionComponentData {
+  connection: MaybeUnsavedFireflyConnectionRecord;
+  is_new: boolean;
+  loading: boolean;
+  saving: boolean;
+  save_message: string;
+}
+
+
+declare interface ConnectionComponentMethods {
+    populateConnection(): null;
+    saveConfig(): null;
+    cleanConnection() : FireflyConnection;
+    client(this: ConnectionComponent): Client;
+}
+
+
+type ConnectionComponent = ConnectionComponentData & ConnectionComponentMethods;
 
 
 function newDefaults() : FireflyConnection {
@@ -15,12 +40,11 @@ function newDefaults() : FireflyConnection {
 }
 
 export default defineComponent({
-  data() {
+  data(): ConnectionComponentData {
     return {
       connection: newDefaults(),
       is_new: true,
       loading: true,
-      results: [],
       saving: false,
       save_message: ""
     }
@@ -36,15 +60,9 @@ export default defineComponent({
     firefly_iii_config_url() {
       return this.firefly_iii_clean_url+"/profile#oauth"
     },
-    clean_connection() : FireflyConnection {
-      return {
-        firefly_iii_url: this.firefly_iii_clean_url,
-        firefly_iii_personal_access_token: this.connection.firefly_iii_personal_access_token
-      }
-    },
-    client() {
-      return new Client(this.clean_connection())
-    },
+    client(this: ConnectionComponent) {
+      return new Client(this.cleanConnection())
+    }
   },
   components: {
     'ConnectivityTest': ConnectivityTest
@@ -62,6 +80,12 @@ export default defineComponent({
       }).finally(() => {
         this.saving = false;
       })
+    },
+    cleanConnection() : FireflyConnection {
+      return {
+        firefly_iii_url: this.firefly_iii_clean_url,
+        firefly_iii_personal_access_token: this.connection.firefly_iii_personal_access_token
+      }
     }
   }
 });

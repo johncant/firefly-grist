@@ -19,7 +19,7 @@ export default defineComponent({
     }
   },
   mounted(this: App) {
-    widget.init(self)
+    widget.init(this);
   },
   components: {
     "Tablesetup": Tablesetup,
