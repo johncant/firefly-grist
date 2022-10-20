@@ -1,7 +1,13 @@
 <script lang="ts">
 import { defineComponent, toRaw } from 'vue'
 import widget from './widget.js'
-import { FireflyConnectionRecord } from './types/FireflyConnectionRecord.js'
+import type { FireflyConnectionRecord } from './types/FireflyConnectionRecord.js'
+
+interface FetchAccounts {
+  table_name: string;
+  connection: FireflyConnectionRecord;
+  setRecord: (FireflyConnectionRecord) => null
+}
 
 export default defineComponent({
   mounted() {
@@ -21,9 +27,9 @@ export default defineComponent({
     setRecord(rec: FireflyConnectionRecord) {
       this.connection = rec
     },
-    fetchAccounts() {
+    fetchAccounts(this: FetchAccounts) {
       console.log(toRaw(this.connection))
-      widget.createOrOverwriteAccountsTable(self.table_name);
+      widget.createOrOverwriteAccountsTable(this.table_name);
     }
   },
   components: {

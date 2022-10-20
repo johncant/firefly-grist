@@ -3,8 +3,8 @@ import { defineComponent } from 'vue'
 import Tablesetup from './Tablesetup.vue'
 import Connection from './Connection.vue'
 import FetchAccounts from './FetchAccounts.vue'
-import widget from './widget.ts'
-import { App } from './types/App.js'
+import widget from './widget.js'
+import type { App } from './types/App.js'
 
 
 export default defineComponent({

@@ -1,10 +1,13 @@
 <script lang="ts">
 import { defineComponent, toRaw } from 'vue'
 import ConnectivityTest from './ConnectivityTest.vue'
-import widget from './widget.ts'
-import Client from './client.ts'
+import widget from './widget.js'
+import Client from './client.js'
+import type { FireflyConnection } from './types/FireflyConnection.js'
+import type { FireflyConnectionRecord } from 'types/FireflyConnectionRecord.js'
 
-function newDefaults() {
+
+function newDefaults() : FireflyConnection {
   return {
     firefly_iii_url: "",
     firefly_iii_personal_access_token: "",
@@ -33,11 +36,14 @@ export default defineComponent({
     firefly_iii_config_url() {
       return this.firefly_iii_clean_url+"/profile#oauth"
     },
-    client() {
-      return new Client({
+    clean_connection() : FireflyConnection {
+      return {
         firefly_iii_url: this.firefly_iii_clean_url,
         firefly_iii_personal_access_token: this.connection.firefly_iii_personal_access_token
-      })
+      }
+    },
+    client() {
+      return new Client(this.clean_connection())
     },
   },
   components: {

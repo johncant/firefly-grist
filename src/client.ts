@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { FireflyConnection } from './types/FireflyConnection.js'
+import { AxiosInstance } from 'axios'
+import type { FireflyConnection } from './types/FireflyConnection.js'
 
 export default class Client {
-  http_client: Any
+  http_client: AxiosInstance
 
   constructor(conn: FireflyConnection) {
     this.http_client = axios.create({

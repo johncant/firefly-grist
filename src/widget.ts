@@ -2,7 +2,7 @@ import * as _grist from 'grist-plugin-api'
 import { App } from './types/App.js'
 import { FireflyConnection } from './types/FireflyConnection.js'
 
-const grist : Any = _grist // TODO - why are typings not correct?
+const grist : any = _grist // TODO - why are typings not correct?
 
 export default {
   init(app: App) {
