@@ -1,6 +1,11 @@
+## Warning: DO NOT USE
+
+The idea behind this repo is fundamentally flawed. If you want to automate import of firefly-iii data into grist, you are better off using `n8n`.
+
 # grist-widget-firefly
 
 Widget for viewing firefly-iii data using grist
+
 
 # Hacking
 
