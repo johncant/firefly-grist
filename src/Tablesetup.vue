@@ -17,7 +17,11 @@ export default defineComponent({
   },
   methods: {
     async modifyTable() {
-      this.populateTableSetup()
+      this.loading = true;
+      await widget.createOrOverwriteConnectionsTable(this.name);
+      await this.populateTableSetup();
+      this.loading = false;
+
     },
     async populateTableSetup() {
       this.loading = true;
@@ -28,12 +32,15 @@ export default defineComponent({
       this.column_info = data.column_info // TODO - won't work due change of object
       this.loading = false;
     },
+  },
+  mounted() {
+    this.populateTableSetup();
   }
 })
 </script>
 <template>
 
-  <transition @after-enter=populateTableSetup>
+  <transition>
     <div>
       <h3>Table setup</h3>
 

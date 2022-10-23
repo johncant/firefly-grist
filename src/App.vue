@@ -3,6 +3,7 @@ import { defineComponent } from 'vue'
 import Tablesetup from './Tablesetup.vue'
 import Connection from './Connection.vue'
 import FetchAccounts from './FetchAccounts.vue'
+import FetchTransactions from './FetchTransactions.vue'
 import widget from './widget.js'
 import type { App } from './types/App.js'
 
@@ -24,7 +25,8 @@ export default defineComponent({
   components: {
     "Tablesetup": Tablesetup,
     "Connection": Connection,
-    "FetchAccounts": FetchAccounts
+    "FetchAccounts": FetchAccounts,
+    "FetchTransactions": FetchTransactions,
   }
 })
 </script>
@@ -54,4 +56,5 @@ export default defineComponent({
   <Tablesetup screen=screen v-if="screen == 'tablesetup'" @close="screen = 'main_menu'"></TableSetup>
   <Connection screen=screen v-if="screen == 'connection'" @close="screen = 'main_menu'" widget=widget></Connection>
   <FetchAccounts screen=screen v-if="screen == 'fetch_accounts'" @close="screen = 'main_menu'" widget=widget></FetchAccounts>
+  <FetchTransactions screen=screen v-if="screen == 'fetch_transactions'" @close="screen = 'main_menu'" widget=widget></FetchTransactions>
 </template>

@@ -125,6 +125,10 @@ export default defineComponent({
       <p v-if="saving">Saving connection</p>
       <p v-if="!saving">{{ save_message }}</p>
 
+      <p>
+        <button @click="$emit('close')">Back</button>
+      </p>
+
     </div>
   </transition>
 </template>
