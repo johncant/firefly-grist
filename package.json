@@ -14,14 +14,17 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.186",
+    "axios-curlirize": "^2.0.0",
     "grist-plugin-api": "^0.0.1",
     "lodash": "^4.17.21",
+    "uuid": "^9.0.0",
     "vue": "^3.2.38"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.0",
     "@types/node": "^16.11.56",
+    "@types/uuid": "^9.0.0",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

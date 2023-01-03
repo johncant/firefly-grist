@@ -110,7 +110,7 @@ export default {
   },
   async createOrOverwriteAccountsTable(table_name: string) {
     const columns = [
-      {isFormula: true, type: "Any", id: "firefly_iii_id", formula: ""},
+      {isFormula: true, type: "Any", id: "account_id", formula: ""},
       {isFormula: true, type: "Any", id: "created_at", formula: ""},
       {isFormula: true, type: "Any", id: "updated_at", formula: ""},
       {isFormula: true, type: "Any", id: "active", formula: ""},
@@ -148,7 +148,7 @@ export default {
   },
   async createOrOverwriteTransactionGroupTable(table_name: string) {
     const columns = [
-      {isFormula: true, type: "Any", id: "firefly_iii_id", formula: ""},
+      {isFormula: true, type: "Any", id: "transaction_group_id", formula: ""},
       {isFormula: true, type: "Any", id: "created_at", formula: ""},
       {isFormula: true, type: "Any", id: "updated_at", formula: ""},
       {isFormula: true, type: "Any", id: "user", formula: ""},
@@ -159,22 +159,22 @@ export default {
   },
   async createOrOverwriteTransactionJournalTable(table_name: string) {
     const columns = [
-      {isFormula: true, type: "Any", id: "user", formula: ""},
-      {isFormula: true, type: "Any", id: "transaction_journal_id", formula: ""},
-      {isFormula: true, type: "Any", id: "type", formula: ""},
-      {isFormula: true, type: "Any", id: "date", formula: ""},
-      {isFormula: true, type: "Any", id: "order", formula: ""},
-      {isFormula: true, type: "Any", id: "currency_id", formula: ""},
-      {isFormula: true, type: "Any", id: "currency_code", formula: ""},
-      {isFormula: true, type: "Any", id: "currency_symbol", formula: ""},
-      {isFormula: true, type: "Any", id: "currency_name", formula: ""},
-      {isFormula: true, type: "Any", id: "currency_decimal_places", formula: ""},
-      {isFormula: true, type: "Any", id: "foreign_currency_id", formula: ""},
-      {isFormula: true, type: "Any", id: "foreign_currency_code", formula: ""},
-      {isFormula: true, type: "Any", id: "foreign_currency_symbol", formula: ""},
-      {isFormula: true, type: "Any", id: "foreign_currency_decimal_places", formula: ""},
-      {isFormula: true, type: "Any", id: "amount", formula: ""},
-      {isFormula: true, type: "Any", id: "foreign_amount", formula: ""},
+      {isFormula: true, type: "Int", id: "user", formula: ""},
+      {isFormula: true, type: "Int", id: "transaction_journal_id", formula: ""},
+      {isFormula: true, type: "Text", id: "type", formula: ""},
+      {isFormula: true, type: "Date", id: "date", formula: ""},
+      {isFormula: true, type: "Int", id: "order", formula: ""},
+      {isFormula: true, type: "Int", id: "currency_id", formula: ""},
+      {isFormula: true, type: "Text", id: "currency_code", formula: ""},
+      {isFormula: true, type: "Text", id: "currency_symbol", formula: ""},
+      {isFormula: true, type: "Text", id: "currency_name", formula: ""},
+      {isFormula: true, type: "Int", id: "currency_decimal_places", formula: ""},
+      {isFormula: true, type: "Int", id: "foreign_currency_id", formula: ""},
+      {isFormula: true, type: "Text", id: "foreign_currency_code", formula: ""},
+      {isFormula: true, type: "Text", id: "foreign_currency_symbol", formula: ""},
+      {isFormula: true, type: "Int", id: "foreign_currency_decimal_places", formula: ""},
+      {isFormula: true, type: "Numeric", id: "amount", formula: ""},
+      {isFormula: true, type: "Numeric", id: "foreign_amount", formula: ""},
       {isFormula: true, type: "Any", id: "description", formula: ""},
       {isFormula: true, type: "Any", id: "source_id", formula: ""},
       {isFormula: true, type: "Any", id: "source_name", formula: ""},
@@ -251,4 +251,5 @@ export default {
       this.fetchCompleteSelectedRecord(subsetRec.id).then(func)
     })
   },
+
 }

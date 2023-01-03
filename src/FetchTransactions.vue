@@ -53,7 +53,7 @@ export default defineComponent({
       for await (const transaction_group of transaction_groups) {
         let transaction_group_record = _.assign(
           _.omit(transaction_group.attributes, "transactions"),
-          {"firefly_iii_id": transaction_group.id}
+          {"transaction_group_id": transaction_group.id}
         )
         await transaction_group_table.create({
           "fields": transaction_group_record

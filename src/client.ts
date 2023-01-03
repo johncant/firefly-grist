@@ -32,7 +32,7 @@ export default class Client {
     let result = null;
     let page = 0
 
-    while(result == null || result.meta.pagination.current_page < result.meta.pagination.total) {
+    while(result == null || result.meta.pagination.current_page < result.meta.pagination.total_pages) {
       result = await this.fetchPage(path, page);
       for (const item of result.data) {
         yield item

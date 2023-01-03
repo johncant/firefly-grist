@@ -4,6 +4,7 @@ import Tablesetup from './Tablesetup.vue'
 import Connection from './Connection.vue'
 import FetchAccounts from './FetchAccounts.vue'
 import FetchTransactions from './FetchTransactions.vue'
+import N8NSetup from './N8NSetup.vue'
 import widget from './widget.js'
 import type { App } from './types/App.js'
 
@@ -27,6 +28,7 @@ export default defineComponent({
     "Connection": Connection,
     "FetchAccounts": FetchAccounts,
     "FetchTransactions": FetchTransactions,
+    "N8NSetup": N8NSetup,
   }
 })
 </script>
@@ -51,10 +53,15 @@ export default defineComponent({
     <p>
       <button @click="screen = 'fetch_transactions'">Fetch Transactions</button>
     </p>
+
+    <p>
+      <button @click="screen = 'n8n'">Integration via n8n</button>
+    </p>
   </div>
 
   <Tablesetup screen=screen v-if="screen == 'tablesetup'" @close="screen = 'main_menu'"></TableSetup>
   <Connection screen=screen v-if="screen == 'connection'" @close="screen = 'main_menu'" widget=widget></Connection>
   <FetchAccounts screen=screen v-if="screen == 'fetch_accounts'" @close="screen = 'main_menu'" widget=widget></FetchAccounts>
   <FetchTransactions screen=screen v-if="screen == 'fetch_transactions'" @close="screen = 'main_menu'" widget=widget></FetchTransactions>
+  <N8NSetup screen=screen v-if="screen == 'n8n'" @close="screen = 'main_menu'" widget=widget></N8NSetup>
 </template>
